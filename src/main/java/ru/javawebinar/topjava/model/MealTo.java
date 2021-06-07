@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MealTo {
-    private LocalDateTime dateTime;
+    private final LocalDateTime dateTime;
 
-    private String description;
+    private final String description;
 
-    private int calories;
+    private final int calories;
 
-    private boolean excess;
+    private final boolean excess;
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -31,8 +31,6 @@ public class MealTo {
     public String getDate() {
         return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
     }
-
-    public MealTo() {}
 
     public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.dateTime = dateTime;

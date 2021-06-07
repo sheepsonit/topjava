@@ -20,7 +20,7 @@
     </tr>
     <%--@elvariable id="mealsTo" type="java.util.List"--%>
     <c:forEach var="mealTo" items="${mealsTo}">
-        <jsp:useBean id="mealTo" class="ru.javawebinar.topjava.model.MealTo"/>
+        <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
         <c:set var="textColor" value="${mealTo.excess ? 'red' : 'green'}"/>
         <tr style="color: ${textColor} ">
             <td><%=mealTo.getDate()%></td>

@@ -1,5 +1,7 @@
+<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <html>
 <head>
     <title>Meals</title>
@@ -10,6 +12,9 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
+<br>
+<a href="meals?action=add">Add Meal</a>
+<br>
 <table border="1" cellpadding="2">
     <tr>
         <th>Date</th>
@@ -21,13 +26,12 @@
     <%--@elvariable id="mealsTo" type="java.util.List"--%>
     <c:forEach var="mealTo" items="${mealsTo}">
         <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
-        <c:set var="textColor" value="${mealTo.excess ? 'red' : 'green'}"/>
-        <tr style="color: ${textColor} ">
-            <td><%=mealTo.getDate()%></td>
+        <tr style="color: ${mealTo.excess ? 'red' : 'green'} ">
+            <td><%=TimeUtil.format(mealTo.getDateTime())%></td>
             <td>${mealTo.description}</td>
             <td>${mealTo.calories}</td>
-            <td><a href="meals?action=update">Update</a></td>
-            <td><a href="meals?action=delete">Delete</a></td>
+            <td><a href="meals?action=update&id=${mealTo.mealId}">Update</a></td>
+            <td><a href="meals?action=delete&id=${mealTo.mealId}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

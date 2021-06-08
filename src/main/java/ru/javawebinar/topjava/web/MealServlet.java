@@ -36,9 +36,9 @@ public class MealServlet extends HttpServlet {
             return;
         }
 
-        String id = req.getParameter("id").trim();
+        String id = req.getParameter("id");
         int mealId = -1;
-        if (!id.isEmpty()) {
+        if (id != null && !id.isEmpty()) {
             mealId = Integer.parseInt(id);
         }
         MealTo mealTo = null;

@@ -1,15 +1,15 @@
 package ru.javawebinar.topjava.model;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface MealDao {
-    void addMeal(MealTo mealTo);
+    void addMeal(Meal meal);
 
     void deleteMeal(Integer id);
 
-    void updateMeal(MealTo mealTo);
+    void updateMeal(Meal meal);
 
-    Collection<MealTo> getAllMeals();
+    List<Meal> getAllMeals();
 
-    MealTo getMealById(Integer id);
+    Meal getMealById(Integer id);
 }

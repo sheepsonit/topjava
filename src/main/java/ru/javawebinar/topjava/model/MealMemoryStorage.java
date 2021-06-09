@@ -25,7 +25,7 @@ public class MealMemoryStorage implements MealDao {
     }
 
     public void updateMeal(Meal meal) {
-        mealsMap.putIfAbsent(meal.getId(), meal);
+        mealsMap.replace(meal.getId(), meal);
     }
 
     public List<Meal> getAllMeals() {

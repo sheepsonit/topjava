@@ -66,16 +66,15 @@ public class MealServlet extends HttpServlet {
 
         String strId = req.getParameter("id").trim();
         int id = Integer.parseInt(strId);
-        if (id > -1) {
-            if (mealStorage.getMealById(id) != null) {
-                mealStorage.deleteMeal(id);
-            }
-        }
-
         String dateTime = req.getParameter("dateTime");
         int calories = Integer.parseInt(req.getParameter("calories"));
         String description = req.getParameter("description");
-        mealStorage.addMeal(new Meal(id, LocalDateTime.parse(dateTime), description, calories));
+        Meal editMeal = new Meal(id, LocalDateTime.parse(dateTime), description, calories);
+        if (id > -1) {
+            mealStorage.updateMeal(editMeal);
+        } else {
+            mealStorage.addMeal(editMeal);
+        }
         resp.sendRedirect("meals");
     }
 }

@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealDao;
 import ru.javawebinar.topjava.model.MealMemoryStorage;
@@ -14,10 +15,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(UserServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
     private MealDao mealStorage;
 
@@ -28,10 +27,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("redirect to meals");
+
 
         String action = req.getParameter("action");
         if (action == null) {
+            LOG.debug("redirect to meals");
             req.setAttribute("mealsTo", MealsUtil.filteredByStreams(mealStorage.getAllMeals(), LocalTime.MIN, LocalTime.MAX, 2000));
             req.getRequestDispatcher("/meals.jsp").forward(req, resp);
             return;
@@ -46,13 +46,16 @@ public class MealServlet extends HttpServlet {
         Meal editMeal = null;
         switch (action) {
             case "delete":
+                LOG.debug("delete meal");
                 mealStorage.deleteMeal(mealId);
                 resp.sendRedirect("meals");
                 return;
             case "update":
+                LOG.debug("update meal");
                 editMeal = mealStorage.getMealById(mealId);
                 break;
             case "add":
+                LOG.debug("add new meal");
                 editMeal = new Meal();
                 break;
         }

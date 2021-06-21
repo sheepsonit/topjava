@@ -22,7 +22,7 @@
     <hr/>
     <h2>Meals</h2>
     <hr>
-    <form method="post" action="meals">
+    <form method="get" action="meals">
         <input type="hidden" name="needFiltered">
         <table>
             <tr>

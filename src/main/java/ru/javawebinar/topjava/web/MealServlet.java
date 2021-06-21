@@ -24,10 +24,11 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController mealRestController;
-    private final ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init() {
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealRestController = appCtx.getBean(MealRestController.class);
     }
 
@@ -39,22 +40,8 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
-        String needFilter = request.getParameter("needFiltered");
-        if (needFilter != null) {
-            String startDate = getString(request.getParameter("startDate"));
-            String endDate = getString(request.getParameter("endDate"));
-            String startTime = getString(request.getParameter("startTime"));
-            String endTime = getString(request.getParameter("endTime"));
-            request.setAttribute("meals",
-                    mealRestController.getAllFiltered(startDate.isEmpty() ? LocalDate.MIN : LocalDate.parse(startDate),
-                            startTime.isEmpty() ? LocalTime.MIN : LocalTime.parse(startTime),
-                            endDate.isEmpty() ? LocalDate.MAX : LocalDate.parse(endDate),
-                            endTime.isEmpty() ? LocalTime.MAX : LocalTime.parse(endTime)));
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
-            return;
-        }
 
+        String id = request.getParameter("id");
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -72,6 +59,7 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        String needFilter = request.getParameter("needFiltered");
 
         switch (action == null ? "all" : action) {
             case "delete":
@@ -91,18 +79,30 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", mealRestController.getAll());
+                if (needFilter != null) {
+                    String startDate = request.getParameter("startDate");
+                    String startTime = request.getParameter("startTime");
+                    String endDate = request.getParameter("endDate");
+                    String endTime = request.getParameter("endTime");
+                    request.setAttribute("meals",
+                            mealRestController.getAllFiltered(parameterIsEmpty(startDate) ? null : LocalDate.parse(startDate),
+                                    parameterIsEmpty(startTime) ? null : LocalTime.parse(startTime),
+                                    parameterIsEmpty(endDate) ? null : LocalDate.parse(endDate),
+                                    parameterIsEmpty(endTime) ? null : LocalTime.parse(endTime)));
+                } else {
+                    request.setAttribute("meals", mealRestController.getAll());
+                }
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
     }
 
-    private String getString(String parameter) {
-        return parameter == null ? "" : parameter;
-    }
-
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
+    }
+
+    private boolean parameterIsEmpty(String parameter) {
+        return parameter == null || parameter.isEmpty();
     }
 }

@@ -24,8 +24,8 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        if (meal.getId() != userId) return null;
-
+        //  if (meal.getId() != userId) return null;
+        //TODO::check user id before add
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);

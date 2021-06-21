@@ -16,20 +16,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
-    private MealRestController mealRestController;
-    private ConfigurableApplicationContext appCtx;
-
-    @Override
-    public void init() throws ServletException {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        mealRestController = appCtx.getBean(MealRestController.class);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        log.debug("redirect to meals to meals");
         SecurityUtil.setAuthUserId(Integer.parseInt(req.getParameter("userId")));
-        req.setAttribute("meals", mealRestController.getAll());
-        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+        resp.sendRedirect("meals");
     }
 
     @Override
